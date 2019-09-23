@@ -87,11 +87,47 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+
+    borda = util.Stack() #BP eh LIFO -> Pilha
+    expandidos = []
+    borda.push((problem.getStartState(), []))
+    expandidos.append(problem.getStartState())
+
+    while borda.isEmpty() == False:
+        estado_atual, acoes = borda.pop()
+
+        for proximo_estado in problem.getSuccessors(estado_atual):
+            estado = proximo_estado[0]
+            direcao = proximo_estado[1]
+            if estado not in expandidos:
+                if problem.isGoalState(estado):
+                    return acoes + [direcao]
+                else:
+                    borda.push((estado, acoes + [direcao]) )
+                    expandidos.append(estado)
+
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    borda = util.Queue()
+    explorados = []
+    borda.push((problem.getStartState(), []))
+    #print 'Start',problem.getStartState()
+    #Visited.append( problem.getStartState() )
+
+    while borda.isEmpty() == False:
+        estado_atual, acoes = borda.pop() #BP eh FIFO -> Fila
+        for proximo_estado in problem.getSuccessors(estado_atual):
+            estado = proximo_estado[0]
+            direcao = proximo_estado[1]
+            if estado not in explorados:
+                if problem.isGoalState(estado):
+                    return acoes + [direcao]
+                borda.push((estado, acoes + [direcao]))
+                explorados.append(estado)
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -108,7 +144,15 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    from game import Directions
+    S = Directions.SOUTH
+    O = Directions.WEST
+    L = Directions.EAST
+    N = Directions.NORTH
+
+    print "Start:", problem.getStartState()
+    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    print "Start's successors:", problem.getSuccessors(problem.getStartState())
     util.raiseNotDefined()
 
 

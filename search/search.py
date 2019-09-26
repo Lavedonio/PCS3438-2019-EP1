@@ -149,26 +149,20 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    from game import Directions
-    S = Directions.SOUTH
-    O = Directions.WEST
-    L = Directions.EAST
-    N = Directions.NORTH
 
-    print S
-
+    # Estado inicial
     posicao_inicial = problem.getStartState()
     custo_inicial = 0
     caminho_inicial = []
 
+    # Borda de pesquisa e lista com posicoes ja exploradas
     borda = []
     explorados = []
 
+    # Primeira borda
     borda.append([posicao_inicial, caminho_inicial, custo_inicial])
 
-    #print 'Start',problem.getStartState()
-    #Visited.append( problem.getStartState() )
-
+    # Enquanto houver posicoes na borda ou o caminho total nao for encontrado, roda nesse while
     while len(borda) != 0:
 
         #### Calculo de menor f, sendo f = custo + heuristica
@@ -178,45 +172,42 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         for i in range(len(borda)):
             f = borda[i][2] + heuristic(borda[i][0], problem)
 
-            # print borda[i], "; f =", f
-
             if f < lowest_f:
                 lowest_f = f
                 lowest_f_position = i
         #### /Fim do calculo de menor f, sendo f = custo + heuristica
 
         # Verifica posicao escolhida e seus parametros para calcular os proximos sucessores
-        caminhos = []
         posicao_atual, caminho_atual, custo_acumulado = borda.pop(lowest_f_position)  # Ve a pos com menor f
-        explorados.append(posicao_atual)
 
-        # print posicao_atual, caminhos, custo_acumulado
+        # Se posicao atual ainda nao consta na lista de explorados, adiciona-se agora
+        if posicao_inicial not in explorados:
+            explorados.append(posicao_atual)
 
         # Verifica proximos sucessores e adiciona na lista de borda
         for proxima_posicao in problem.getSuccessors(posicao_atual):
             # print "prox_pos:", proxima_posicao
 
+            # Copiando o caminho ate a posicao de referencia
             caminhos = caminho_atual[:]
 
             posicao = proxima_posicao[0]
             nova_direcao = proxima_posicao[1]
             custo = proxima_posicao[2] + custo_acumulado
 
+            # So adiciona na borda se a posicao nao foi percorrida
             if posicao not in explorados:
                 caminhos += [nova_direcao]
 
+                # Se encontrou o estado final, retorna lista de caminho total
                 if problem.isGoalState(posicao):
-                    # print "Posicao:", posicao
-                    # print "Custo:", custo
-                    # print caminhos
                     return caminhos
 
-                borda.append([posicao, caminhos, custo])
-                explorados.append(posicao)
+                # Senao adiciona na borda e nos explorados e continua a busca
+                else:
+                    borda.append([posicao, caminhos, custo])
+                    explorados.append(posicao)
 
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
     util.raiseNotDefined()
 
 

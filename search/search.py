@@ -136,7 +136,7 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return aStarSearch(problem)
 
 
 def nullHeuristic(state, problem=None):
@@ -155,35 +155,57 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     L = Directions.EAST
     N = Directions.NORTH
 
-    borda = problem.getSuccessors(problem.getStartState())
-    explorados = []
+    posicao_inicial = problem.getStartState()
+    custo_inicial = 0
     caminhos = []
+
+    borda = []
+    explorados = []
+
+    borda.append([posicao_inicial, caminhos, custo_inicial])
+
     #print 'Start',problem.getStartState()
     #Visited.append( problem.getStartState() )
 
     while len(borda) != 0:
-        print borda[0]
 
+        #### Calculo de menor f, sendo f = custo + heuristica
         lowest_f = borda[0][2] + heuristic(borda[0][0], problem)
         lowest_f_position = 0
 
         for i in range(len(borda)):
             f = borda[i][2] + heuristic(borda[i][0], problem)
+
+            # print borda[i], "; f =", f
+
             if f < lowest_f:
                 lowest_f = f
                 lowest_f_position = i
+        #### /Fim do calculo de menor f, sendo f = custo + heuristica
 
-        estado_atual, acoes, h = borda.pop(lowest_f_position)  # Ve a pos com menor h
+        # Verifica posicao escolhida e seus parametros para calcular os proximos sucessores
+        posicao_atual, caminhos, custo_acumulado = borda.pop(lowest_f_position)  # Ve a pos com menor f
         explorados.append(problem.getStartState())
-        print estado_atual, acoes, h
-        # for proximo_estado in problem.getSuccessors(estado_atual):
-        #     estado = proximo_estado[0]
-        #     direcao = proximo_estado[1]
-        #     if estado not in explorados:
-        #         if problem.isGoalState(estado):
-        #             return acoes + [direcao]
-        #         borda.push((estado, acoes + [direcao]))
-        #         explorados.append(estado)
+
+        # print posicao_atual, caminhos, custo_acumulado
+
+        # Verifica proximos sucessores e adiciona na lista de borda
+        for proxima_posicao in problem.getSuccessors(posicao_atual):
+            # print "prox_pos:", proxima_posicao
+
+            posicao = proxima_posicao[0]
+            nova_direcao = proxima_posicao[1]
+            custo = proxima_posicao[2] + custo_acumulado
+
+            if posicao not in explorados:
+                caminhos += [nova_direcao]
+
+                if problem.isGoalState(posicao):
+                    print caminhos
+                    return caminhos
+
+                borda.append([posicao, caminhos, custo])
+                explorados.append(posicao)
 
     print "Start:", problem.getStartState()
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())

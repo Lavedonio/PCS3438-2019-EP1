@@ -155,7 +155,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     L = Directions.EAST
     N = Directions.NORTH
 
-    borda = [problem.getStartState()]
+    borda = problem.getSuccessors(problem.getStartState())
     explorados = []
     caminhos = []
     #print 'Start',problem.getStartState()
@@ -163,16 +163,17 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
     while len(borda) != 0:
         print borda[0]
-        lowest_h = borda[0][2]
-        lowest_h_position = 0
 
-        for i in range(borda):
-            h = borda[i][2]
-            if h < lowest_h:
-                lowest_h = h
-                lowest_h_position = i
+        lowest_f = borda[0][2] + heuristic(borda[0][0], problem)
+        lowest_f_position = 0
 
-        estado_atual, acoes, h = borda.pop(lowest_h_position)  # Ve a pos com menor h
+        for i in range(len(borda)):
+            f = borda[i][2] + heuristic(borda[i][0], problem)
+            if f < lowest_f:
+                lowest_f = f
+                lowest_f_position = i
+
+        estado_atual, acoes, h = borda.pop(lowest_f_position)  # Ve a pos com menor h
         explorados.append(problem.getStartState())
         print estado_atual, acoes, h
         # for proximo_estado in problem.getSuccessors(estado_atual):

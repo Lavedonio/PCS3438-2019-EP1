@@ -155,6 +155,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     L = Directions.EAST
     N = Directions.NORTH
 
+    print S
+
     posicao_inicial = problem.getStartState()
     custo_inicial = 0
     caminhos = []
@@ -185,7 +187,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
         # Verifica posicao escolhida e seus parametros para calcular os proximos sucessores
         posicao_atual, caminhos, custo_acumulado = borda.pop(lowest_f_position)  # Ve a pos com menor f
-        explorados.append(problem.getStartState())
+        explorados.append(posicao_atual)
 
         # print posicao_atual, caminhos, custo_acumulado
 
@@ -201,7 +203,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 caminhos += [nova_direcao]
 
                 if problem.isGoalState(posicao):
-                    print caminhos
+                    print "Posicao:", posicao
+                    print "Custo:", custo
                     return caminhos
 
                 borda.append([posicao, caminhos, custo])

@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -108,6 +108,7 @@ def depthFirstSearch(problem):
 
     util.raiseNotDefined()
 
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
@@ -117,8 +118,9 @@ def breadthFirstSearch(problem):
     #print 'Start',problem.getStartState()
     #Visited.append( problem.getStartState() )
 
-    while borda.isEmpty() == False:
-        estado_atual, acoes = borda.pop() #BP eh FIFO -> Fila
+    while not borda.isEmpty():
+        estado_atual, acoes = borda.pop()  # BP eh FIFO -> Fila
+        print estado_atual, acoes
         for proximo_estado in problem.getSuccessors(estado_atual):
             estado = proximo_estado[0]
             direcao = proximo_estado[1]
@@ -130,10 +132,12 @@ def breadthFirstSearch(problem):
 
     util.raiseNotDefined()
 
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -142,6 +146,7 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     from game import Directions
@@ -149,6 +154,35 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     O = Directions.WEST
     L = Directions.EAST
     N = Directions.NORTH
+
+    borda = [problem.getStartState()]
+    explorados = []
+    caminhos = []
+    #print 'Start',problem.getStartState()
+    #Visited.append( problem.getStartState() )
+
+    while len(borda) != 0:
+        print borda[0]
+        lowest_h = borda[0][2]
+        lowest_h_position = 0
+
+        for i in range(borda):
+            h = borda[i][2]
+            if h < lowest_h:
+                lowest_h = h
+                lowest_h_position = i
+
+        estado_atual, acoes, h = borda.pop(lowest_h_position)  # Ve a pos com menor h
+        explorados.append(problem.getStartState())
+        print estado_atual, acoes, h
+        # for proximo_estado in problem.getSuccessors(estado_atual):
+        #     estado = proximo_estado[0]
+        #     direcao = proximo_estado[1]
+        #     if estado not in explorados:
+        #         if problem.isGoalState(estado):
+        #             return acoes + [direcao]
+        #         borda.push((estado, acoes + [direcao]))
+        #         explorados.append(estado)
 
     print "Start:", problem.getStartState()
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())

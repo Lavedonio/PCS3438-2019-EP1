@@ -159,12 +159,12 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
     posicao_inicial = problem.getStartState()
     custo_inicial = 0
-    caminhos = []
+    caminho_inicial = []
 
     borda = []
     explorados = []
 
-    borda.append([posicao_inicial, caminhos, custo_inicial])
+    borda.append([posicao_inicial, caminho_inicial, custo_inicial])
 
     #print 'Start',problem.getStartState()
     #Visited.append( problem.getStartState() )
@@ -186,7 +186,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         #### /Fim do calculo de menor f, sendo f = custo + heuristica
 
         # Verifica posicao escolhida e seus parametros para calcular os proximos sucessores
-        posicao_atual, caminhos, custo_acumulado = borda.pop(lowest_f_position)  # Ve a pos com menor f
+        caminhos = []
+        posicao_atual, caminho_atual, custo_acumulado = borda.pop(lowest_f_position)  # Ve a pos com menor f
         explorados.append(posicao_atual)
 
         # print posicao_atual, caminhos, custo_acumulado
@@ -194,6 +195,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         # Verifica proximos sucessores e adiciona na lista de borda
         for proxima_posicao in problem.getSuccessors(posicao_atual):
             # print "prox_pos:", proxima_posicao
+
+            caminhos = caminho_atual[:]
 
             posicao = proxima_posicao[0]
             nova_direcao = proxima_posicao[1]
@@ -203,8 +206,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 caminhos += [nova_direcao]
 
                 if problem.isGoalState(posicao):
-                    print "Posicao:", posicao
-                    print "Custo:", custo
+                    # print "Posicao:", posicao
+                    # print "Custo:", custo
+                    # print caminhos
                     return caminhos
 
                 borda.append([posicao, caminhos, custo])
